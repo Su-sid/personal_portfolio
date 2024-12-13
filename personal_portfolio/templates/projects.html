@@ -1,0 +1,131 @@
+
+{% extends "main/body.html" %}
+{% load static %}
+
+
+{% block body_template %}
+{%include "main/nav.html"%}
+{% url 'contacts' as contacts_page %}  
+            <!-- Projects Section-->
+            <section class="py-5">
+                <div class="container px-5 mb-5">
+                    <div class="text-center mb-5">
+                        <h1 class="display-5 fw-bolder mb-0">
+                            <span class="text-gradient d-inline">Projects</span>
+                        </h1>
+                    </div>
+                    <div class="row gx-5 justify-content-center">
+                        <div class="col-lg-11 col-xl-9 col-xxl-8">
+                            {% for project in featured_projects %}
+                                <!-- Project Card -->
+                                <div class="card overflow-hidden shadow rounded-4 border-0 mb-5">
+                                    <div class="card-body p-0">
+                                        <div class="d-flex flex-column-reverse flex-md-row">
+                                      
+                                            <div class="p-4 align-items-center">
+                                                <h2 class="card-title fw-bold mb-3">{{ project.title }}</h2>
+                                                
+                                                <p class="card-text">
+                                                    {{ project.description|truncatewords:10 }}
+                                                    {% if project.description|wordcount > 10 %}
+                                                        <a href="#" class="text-primary" data-bs-toggle="modal" data-bs-target="#projectModal{{ project.id }}">
+                                                           Read More
+                                                        </a>
+                                                    {% endif %}
+                                                </p>
+
+                                                {% if project.technologies_used.all %}
+                                                    <div class="mb-3">
+                                                        <strong>Technologies:</strong>
+                                                        {% for tech in project.technologies_used.all|slice:":3"%}
+                                                            <span class="badge bg-secondary me-1">{{ tech.name }}</span>
+                                                        {% endfor %}
+                                                    </div>
+                                                {% endif %}
+
+                                                    <div class="d-flex">
+                                                        {% if project.github_link %}
+                                                            <a href="{{ project.github_link }}" class="btn btn-outline-primary me-2" target="_blank">
+                                                                <i class="bi bi-github me-1"></i>GitHub
+                                                            </a>
+                                                        {% endif %}
+                                                        {% if project.live_demo_link %}
+                                                            <a href="{{ project.live_demo_link }}" class="btn btn-primary" target="_blank">
+                                                                <i class="bi bi-display me-1"></i>Live Demo
+                                                            </a>
+                                                        {% endif %}
+                                                    </div>
+                                         
+                                            </div>
+                                         
+                                            
+                                                {% if project.image %}
+                                                    <img class="img-fluid " src="{{ project.image.url }}" alt="{{ project.title }}" />
+                                                {% else %}
+                                                    <img class="img-fluid " src="https://dummyimage.com/200x100/343a40/6c757d" alt="{{ project.title }}" />
+                                                {% endif %}
+                                         
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Modal for full project description -->
+                                <div class="modal fade" id="projectModal{{ project.id }}" tabindex="-1" aria-labelledby="projectModalLabel{{ project.id }}" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="projectModalLabel{{ project.id }}">{{ project.title }} - Full Description</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>{{ project.description }}</p>
+                                                
+                                                {% if project.technologies_used.all %}
+                                                    <hr>
+                                                    <h6>Technologies Used:</h6>
+                                                    <div>
+                                                        {% for tech in project.technologies_used.all %}
+                                                            <span class="badge bg-secondary me-1">{{ tech.name }}</span>
+                                                        {% endfor %}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="modal-footer">
+                                                {% if project.github_link %}
+                                                    <a href="{{ project.github_link }}" class="btn btn-outline-primary me-2" target="_blank">
+                                                        <i class="bi bi-github me-1"></i>GitHub
+                                                    </a>
+                                                {% endif %}
+                                                {% if project.live_demo_link %}
+                                                    <a href="{{ project.live_demo_link }}" class="btn btn-primary" target="_blank">
+                                                        <i class="bi bi-display me-1"></i>Live Demo
+                                                    </a>
+                                                {% endif %}
+                                                <button type="button" class="btn btn-secondary text-white" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <div class="alert alert-info text-center text-black" role="alert">
+                                    No featured projects available at the moment.
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Call to action section -->
+            <section class="py-5 bg-gradient-primary-to-secondary text-white">
+                <div class="container px-5 my-5">
+                    <div class="text-center">
+                        <h2 class="display-4 fw-bolder mb-4">Let's build something together</h2>
+                        <a class="btn btn-outline-light btn-lg px-5 py-3 fs-6 fw-bolder" href="{{contacts_page}}"> Contact me</a>
+                    </div>
+                </div>
+            </section>
+
+{%include "main/footer.html"%}
+
+{% endblock %}
