@@ -71,8 +71,8 @@ class Command(BaseCommand):
                 'institution': 'Jomo Kenyatta University of Agriculture and Technology',
                 'location': 'Kenya',
                 'degree_type': "Bachelor's",
-                'field_of_study': 'Computer Technology/Computer Systems Technology',
-                'description': 'Degree program focusing on computer technology and software development.'
+                'field_of_study': 'Computer Technology',
+                'description': "I completed a 4-year Bachelor's degree in Computer Technology from the School of Information and Computing (SCIT) at JKUAT, which provided a comprehensive foundation in both hardware and software systems. This program allowed me to develop an integrated understanding of computing, bridging theoretical knowledge with practical skills in software development, data communications, and electronic systems design. Throughout the course, I acquired key technical skills in programming languages, microprocessor design, and system integration, complemented by critical soft skills such as problem-solving, analytical thinking, and adaptability to emerging technologies."
             }
         ]
         for edu_data in educations:
