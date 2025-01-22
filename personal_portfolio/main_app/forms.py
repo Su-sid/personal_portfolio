@@ -24,6 +24,6 @@ class ContactForm(forms.Form):
             'class': 'form-control',
             'id': 'message',
             'placeholder': 'Write your message here',
-            'style': 'height: 10rem'
+            'style': 'height: 8rem'
         })
     )
