@@ -17,12 +17,12 @@
     ],
     "routes":[
         {
-            "src": "/{.*}",
-            "dest":"personal_portfolio/wsgi.py"
+            "src": "/(.*)",
+            "dest":"/personal_portfolio/wsgi.py"
         },
         {
 
-            "src": "/static/{.*}",
+            "src": "/static/(.*)",
             "dest":"/static/$1"
         }
 
