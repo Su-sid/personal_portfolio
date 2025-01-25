@@ -26,8 +26,8 @@ SECRET_KEY = 'django-insecure-3#ehg!gi4v^)m-x#!-liad!9ga2@^%(kn3$@5%pj%y@-3#$vs6
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    ".vercel.app",
+ALLOWED_HOSTS = ['127.0.0.1',
+    '.vercel.app',
 ]
 
 
@@ -36,11 +36,6 @@ ALLOWED_HOSTS = [
 INSTALLED_APPS = [
 
     'django.contrib.admin',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.facebook',
     'django.contrib.auth',
     'django.contrib.sites',
     'django.contrib.contenttypes',
@@ -58,7 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware'
+   
 ]
 
 ROOT_URLCONF = 'personal_portfolio.urls'
@@ -130,17 +125,24 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+MEDIA_URL = 'media/'
+
 STATICFILES_DIRS = [
     BASE_DIR / "static",
    
 ]
+
+STATIC_ROOT = BASE_DIR / 'staticfiles/'
+MEDIA_ROOT = BASE_DIR / 'static/media'
+
+
 
 #all auth settings and the authentication backend
 
 AUTHENTICATION_BACKENDS= [
 
     'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend'
+   
 ]
 # LOGOUT/LOGIN SETTINGS 
 LOGOUT_REDIRECT_URL= 'account_login'
@@ -166,41 +168,6 @@ SOCIALACCOUNT_AUTOSIGNUP=True
 SOCIALACCOUNT_STORE_TOKENS=True
 SOCIALACCOUNT_ENABLED=True
 SOCIALACCOUNT_ONLY= False
-
-SOCIALACCOUNT_PROVIDERS = {
-    'facebook': {
-        'METHOD': 'oauth2',
-        'SCOPE': ['email', 'public_profile', 'user_friends'],
-        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
-        'INIT_PARAMS': {'cookie': True},
-        'FIELDS': [
-            'id',
-            'email',
-            'name',
-            'first_name',
-            'last_name',
-            'verified',
-            'locale',
-            'timezone',
-            'link',
-            'gender',
-            'updated_time',
-        ],
-        'EXCHANGE_TOKEN': True,
-        'LOCALE_FUNC': 'path.to.callable',
-        'VERIFIED_EMAIL': False,
-        'VERSION': 'v2.12',
-    },
-     'google': {
-        'SCOPE': [
-            'profile',
-            'email',
-        ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        }
-    }
-}
 
 
 #sending email settings

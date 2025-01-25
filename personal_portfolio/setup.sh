@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Clear pip cache
+pip cache purge
+
 # install dependancies
 pip install setuptools
 
