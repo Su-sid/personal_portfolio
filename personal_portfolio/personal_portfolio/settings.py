@@ -17,7 +17,7 @@ from decouple import config
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
+# Quick-start deve-lopment settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -26,7 +26,9 @@ SECRET_KEY = 'django-insecure-3#ehg!gi4v^)m-x#!-liad!9ga2@^%(kn3$@5%pj%y@-3#$vs6
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    ".vercel.app",
+]
 
 
 # Application definition
