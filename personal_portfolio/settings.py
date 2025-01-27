@@ -21,12 +21,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-3#ehg!gi4v^)m-x#!-liad!9ga2@^%(kn3$@5%pj%y@-3#$vs6'
-
+SECRET_KEY =config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1',
+ALLOWED_HOSTS = ['localhost','127.0.0.1',
     '.vercel.app',
 ]
 
@@ -81,12 +80,32 @@ WSGI_APPLICATION = 'personal_portfolio.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+# Configure your production database 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DATABASE_NAME'),
+        'USER': config('DATABASE_USER'),
+        'HOST': config('DATABASE_HOST'),
+        'PASSWORD': config('DATABASE_PASSWORD'),
+        'PORT': config('DATABASE_PORT'),
+        'CONN_MAX_AGE': 600,
+        'OPTIONS': {
+            'sslmode': 'require',
+            'client_encoding': 'UTF8',           
+        }
     }
 }
+
+
+
 
 
 # Password validation
@@ -149,25 +168,6 @@ LOGOUT_REDIRECT_URL= 'account_login'
 LOGIN_REDIRECT_URL= 'home'
 LOGIN_URL= 'account_login'
 
-# ACCOUNTS SETTINGS 
-ACCOUNT_EMAIL_REQUIRED= True
-ACCOUNT_USERNAME_REQUIRED= False
-ACCOUNT_AUTHENTICATION_METHOD= 'email'
-ACCOUNT_UNIQUE_EMAIL= True
-ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE= True
-ACCOUNT_SIGNUP_PASSWORD_VERIFICATION= True
-ACCOUNT_EMAIL_VERIFICATION= 'mandatory'
-ACCOUNT_LOGIN_BY_CODE_ENABLED= True
-ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS= 3
-ACCOUNT_EMAIL_SUBJECT_PREFIX='PERSONAL PORTFOLIO'
-
-# SOCIAL LOGIN/LOGOUT SETTINGS 
-SOCIALACCOUNT_QUERY_EMAIL=ACCOUNT_EMAIL_REQUIRED
-SOCIALACCOUNT_EMAIL_REQUIRED=ACCOUNT_EMAIL_REQUIRED
-SOCIALACCOUNT_AUTOSIGNUP=True
-SOCIALACCOUNT_STORE_TOKENS=True
-SOCIALACCOUNT_ENABLED=True
-SOCIALACCOUNT_ONLY= False
 
 
 #sending email settings
