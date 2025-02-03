@@ -9,7 +9,7 @@ pip install setuptools
 pip install -r requirements.txt
 
 #seed resume data into the db 
-python manage.py seed_resume_data
+python manage.py seed_real_resume_data
 
 # run the django commands
 
