@@ -23,9 +23,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY =config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['.vercel.app','127.0.0.1']
+DEBUG = False
+ALLOWED_HOSTS = ['.vercel.app','127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -41,10 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main_app'
 ]
-
+SITE_ID = 1 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Make sure this is second
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -141,24 +140,33 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
-MEDIA_URL = 'media/'
+MEDIA_URL = '/media/'
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
-   
 ]
 
-STATIC_ROOT = BASE_DIR / 'staticfiles/'
-MEDIA_ROOT = BASE_DIR / 'static/media'
+# Add MIME type for webp
+WHITENOISE_MIMETYPES = {
+    '.webp': 'image/webp'
+}
 
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# Whitenoise configuration
 STORAGES = {
-    # ...
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
+
+# Add these lines for better static file handling
+WHITENOISE_USE_FINDERS = True
+WHITENOISE_MANIFEST_STRICT = False
+WHITENOISE_ALLOW_ALL_ORIGINS = True
 
 #all auth settings and the authentication backend
 
