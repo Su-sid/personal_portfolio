@@ -1,11 +1,10 @@
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_http_methods
-# Create your views here.
 from django.http import HttpResponse
 
 from main_app.forms import ContactForm
-from main_app.models import Education, Experience, ProgrammingLanguage, Project, Skill
+from main_app.viewsmodels import ProjectViewModel, ResumeViewModel
 
 def index(request):
   
@@ -34,14 +33,8 @@ def contact(request):
 
 @require_http_methods(["GET"])
 def projects(request):
-    # Get featured projects first, then all projects
-    featured_projects = Project.objects.filter(is_featured=True)
-    all_projects = Project.objects.all()
-
-    context = {
-        'featured_projects': featured_projects,
-        'all_projects': all_projects
-    }
+    # Get projects data from viewmodel
+    context = ProjectViewModel.get_projects()
     return render(request, 'projects.html', context)
 
 
@@ -50,27 +43,5 @@ def resume(request):
     """
     Render the resume page with all dynamic content
     """
-    experiences = Experience.objects.all()
-
-    # Separate experiences into long and short in Python
-    long_experiences = [exp for exp in experiences if not exp.is_short]  # Long experiences
-    short_experiences = [exp for exp in experiences if exp.is_short]  # Short experiences
-
-    # Get all education entries, ordered by most recent first
-    education_entries = Education.objects.all()
-
-    # Get professional skills
-    professional_skills = Skill.objects.filter(category='PROFESSIONAL')
-
-    # Get programming languages
-    programming_languages = ProgrammingLanguage.objects.all()
-
-    context = {
-        'long_experiences': sorted(long_experiences, key=lambda x: x.duration, reverse=True),
-        'short_experiences': sorted(short_experiences, key=lambda x: x.duration, reverse=True),
-        'education_entries': education_entries,
-        'professional_skills': professional_skills,
-        'programming_languages': programming_languages,
-    }
-
+    context = ResumeViewModel.get_resume_data()
     return render(request, 'resume.html', context)
