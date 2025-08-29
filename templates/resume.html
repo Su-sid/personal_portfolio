@@ -1,6 +1,5 @@
 {% extends 'main/body.html' %}
 {% load static %}
-{% load cache %}
 
 {% block body_template %}
   {% include 'main/nav.html' %}
@@ -11,205 +10,200 @@
     </div>
     <div class="row gx-5 justify-content-center">
       <div class="col-lg-11 col-xl-9 col-xxl-8">
-        {% if error %}
-          <div class="alert alert-warning">{{ error }}</div>
-        {% else %}
-        <div>
-          {% cache 3600 'resume_content' %}
-          <!-- Experience Section -->
-          <section>
-            <div class="d-flex align-items-center justify-content-between mb-4">
-              <h2 class="text-primary fw-bolder mb-0">Experience</h2>
-<div class="btn btn-primary px-4 py-3" >
+        <!-- Experience Section -->
+        <section>
+          <div class="d-flex align-items-center justify-content-between mb-4">
+            <h2 class="text-gradient fw-bolder mb-0">Experience</h2>
 
+            <a class="btn btn-primary px-4 py-3" href="#"><div class="d-inline-block bi bi-download me-2"></div>Download Resume</a>
+          </div>
 
-    
-    <a href="#">  <span class="d-inline-block bi bi-download me-2">
-      Download Resume</a>
-    </span>
-  </div>
+          <!-- Experience Cards -->
+          {% for experience in long_experiences %}
+            <div class="card shadow border-0 rounded-4 mb-5">
+              <div class="card-body p-5">
+                <div class="row align-items-center gx-5">
+                  <div class="col text-center text-lg-start mb-4 mb-lg-0">
+                    <div class="bg-light p-4 rounded-4">
+                      <div class="text-primary fw-bolder mb-2">
+                        {{ experience.start_date|date:'Y' }} -{% if experience.is_current %}
+                          Present
+                        {% else %}
+                          {{ experience.end_date|date:'Y' }}
+                        {% endif %}
+                      </div>
+                      <div class="small fw-bolder">{{ experience.job_title }}</div>
+                      <div class="small text-muted">{{ experience.company }}</div>
+                      <div class="small text-muted">{{ experience.location }}</div>
+                    </div>
+                  </div>
+                  <div class="col-lg-8">
+                    <div>{{ experience.description }}</div>
+                  </div>
+                </div>
+              </div>
             </div>
+          {% endfor %}
 
-            <!-- Experience Cards -->
-            {% for experience in long_experiences %}
-              <div class="card shadow border-0 rounded-4 mb-5">
-                <div class="card-body p-5">
-                  <div class="row align-items-center gx-5">
-                    <div class="col text-center text-lg-start mb-4 mb-lg-0">
-                      <div class="bg-light p-4 rounded-4">
-                        <div class="text-primary fw-bolder mb-2">
-                          {{ experience.start_date|date:'Y' }} -{% if experience.is_current %}
-                            Present
-                          {% else %}
-                            {{ experience.end_date|date:'Y' }}
-                          {% endif %}
+          {% if short_experiences %}
+            <div class="text-center mb-5">
+              <div id="shortExperiences" class="collapse mt-4">
+                {% for experience in short_experiences %}
+                  <div class="card shadow border-0 rounded-4 mb-5">
+                    <div class="card-body p-5">
+                      <div class="row align-items-center gx-5">
+                        <div class="col text-center text-lg-start mb-4 mb-lg-0">
+                          <div class="bg-light p-4 rounded-4">
+                            <div class="text-primary fw-bolder mb-2">
+                              {{ experience.start_date|date:'Y' }} -{% if experience.is_current %}
+                                Present
+                              {% else %}
+                                {{ experience.end_date|date:'Y' }}
+                              {% endif %}
+                            </div>
+                            <div class="small fw-bolder">{{ experience.job_title }}</div>
+                            <div class="small text-muted">{{ experience.company }}</div>
+                            <div class="small text-muted">{{ experience.location }}</div>
+                          </div>
                         </div>
-                        <div class="small fw-bolder">{{ experience.job_title }}</div>
-                        <div class="small text-muted">{{ experience.company }}</div>
-                        <div class="small text-muted">{{ experience.location }}</div>
+                        <div class="col-lg-8">
+                          <div>{{ experience.description }}</div>
+                        </div>
                       </div>
                     </div>
-                    <div class="col-lg-8">
-                      <div>{{ experience.description }}</div>
+                  </div>
+                {% endfor %}
+              </div>
+              <button type="button" class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#shortExperiences" data-bs-tooltip="The following experiences are less than a year long">Show/Hide More Experiences</button>
+            </div>
+          {% endif %}
+        </section>
+
+        <!-- Education Section -->
+        <section>
+          <h2 class="text-gradient fw-bolder mb-4">Education</h2>
+
+          <!-- Education Cards -->
+          {% for education in education_entries %}
+            <div class="card shadow border-0 rounded-4 mb-5">
+              <div class="card-body p-5">
+                <div class="row align-items-center gx-2">
+                  <div class="col text-center text-lg-start mb-4 mb-lg-0">
+                    <div class="bg-light p-4 rounded-4">
+                      <div class="text-primary fw-bolder mb-2">{{ education.start_date|date:'Y' }} - {{ education.end_date|date:'Y' }}</div>
+                      <div class="mb-2">
+                        <div class="small fw-bolder">{{ education.institution }}</div>
+                        <div class="small text-muted">{{ education.location }}</div>
+                      </div>
+                      <div class="fst-italic">
+                        <div class="small text-muted">{{ education.degree_type }}</div>
+                        <div class="small text-muted">{{ education.field_of_study }}</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-8">
+                    <div>
+                      {{ education.description|truncatewords:45 }}
+                      {% if education.description|wordcount > 45 %}
+                        <a href="#" class="text-primary" data-bs-toggle="modal" data-bs-target="#educationModal{{ education.id }}">Read More</a>
+                      {% endif %}
+                    </div>
+                    <div class="modal fade" id="educationModal{{ education.id }}" tabindex="-1" aria-labelledby="educationModalLabel{{ education.id }}" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="educationModalLabel{{ education.id }}">{{ education.field_of_study }} - Full Description</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+
+                          <div class="modal-body">
+                            <p>{{ education.description }}</p>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary text-white" data-bs-dismiss="modal">Close</button>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            {% endfor %}
+            </div>
+          {% endfor %}
+        </section>
 
-            {% if short_experiences %}
-              <div class="text-center mb-5">
-                <div id="shortExperiences" class="collapse mt-4">
-                  {% for experience in short_experiences %}
-                    <div class="card shadow border-0 rounded-4 mb-5">
-                      <div class="card-body p-5">
-                        <div class="row align-items-center gx-5">
-                          <div class="col text-center text-lg-start mb-4 mb-lg-0">
-                            <div class="bg-light p-4 rounded-4">
-                              <div class="text-primary fw-bolder mb-2">
-                                {{ experience.start_date|date:'Y' }} -{% if experience.is_current %}
-                                  Present
-                                {% else %}
-                                  {{ experience.end_date|date:'Y' }}
-                                {% endif %}
-                              </div>
-                              <div class="small fw-bolder">{{ experience.job_title }}</div>
-                              <div class="small text-muted">{{ experience.company }}</div>
-                              <div class="small text-muted">{{ experience.location }}</div>
-                            </div>
-                          </div>
-                          <div class="col-lg-8">
-                            <div>{{ experience.description }}</div>
-                          </div>
-                        </div>
-                      </div>
+        <!-- Skills Section -->
+        <section>
+          <div class="card shadow border-0 rounded-4 mb-5">
+            <div class="card-body p-5">
+              <!-- Professional skills list -->
+              <div class="d-flex align-items-center mb-4">
+                <div class="feature bg-primary bg-gradient-primary-to-secondary text-white rounded-3 me-3">
+                  <i class="bi {% if professional_skills.first.icon %}
+                      {{ professional_skills.first.icon }}
+                    {% else %}
+                      
+                      
+                      bi-tools
+
+
+                    {% endif %}">
+
+                  </i>
+                </div>
+                <h3 class="fw-bolder mb-0"><span class="text-gradient d-inline">Professional Skills</span></h3>
+              </div>
+
+              <!-- Skills Grid -->
+              <div class="mb-0">
+                <div class="row row-cols-1 row-cols-md-3 mb-4">
+                  {% for skill in professional_skills %}
+                    <div class="col mb-4 mb-md-4">
+                      <div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">{{ skill.name }}</div>
                     </div>
                   {% endfor %}
                 </div>
-                <button type="button" class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#shortExperiences" data-bs-tooltip="The following experiences are less than a year long">Show/Hide More Experiences</button>
               </div>
-            {% endif %}
-          </section>
+            </div>
+          </div>
+        </section>
 
-          <!-- Education Section -->
-          <section>
-            <h2 class="text-secondary fw-bolder mb-4">Education</h2>
-
-            <!-- Education Cards -->
-            {% for education in education_entries %}
-              <div class="card shadow border-0 rounded-4 mb-5">
-                <div class="card-body p-5">
-                  <div class="row align-items-center gx-2">
-                    <div class="col text-center text-lg-start mb-4 mb-lg-0">
-                      <div class="bg-light p-4 rounded-4">
-                        <div class="text-secondary fw-bolder mb-2">{{ education.start_date|date:'Y' }} - {{ education.end_date|date:'Y' }}</div>
-                        <div class="mb-2">
-                          <div class="small fw-bolder">{{ education.institution }}</div>
-                          <div class="small text-muted">{{ education.location }}</div>
-                        </div>
-                        <div class="fst-italic">
-                          <div class="small text-muted">{{ education.degree_type }}</div>
-                          <div class="small text-muted">{{ education.field_of_study }}</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-lg-8">
-                      <div>
-                        {{ education.description|truncatewords:45 }}
-                        {% if education.description|wordcount > 45 %}
-                          <a href="#" class="text-primary" data-bs-toggle="modal" data-bs-target="#educationModal{{ education.id }}">Read More</a>
-                        {% endif %}
-                      </div>
-                      <div class="modal fade" id="educationModal{{ education.id }}" tabindex="-1" aria-labelledby="educationModalLabel{{ education.id }}" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h5 class="modal-title" id="educationModalLabel{{ education.id }}">{{ education.field_of_study }} - Full Description</h5>
-                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-
-                            <div class="modal-body">
-                              <p>{{ education.description }}</p>
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary text-white" data-bs-dismiss="modal">Close</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            {% endfor %}
-          </section>
-
-          <!-- Skills Section -->
-          <section>
-            <div class="card shadow border-0 rounded-4 mb-5">
-              <div class="card-body p-5">
-                <!-- Professional skills list -->
+        <!-- Languages Section -->
+        <section>
+          <div class="card shadow border-0 rounded-4 mb-5">
+            <div class="card-body p-5">
+              <!-- Languages list -->
+              <div class="mb-0">
                 <div class="d-flex align-items-center mb-4">
                   <div class="feature bg-primary bg-gradient-primary-to-secondary text-white rounded-3 me-3">
-                    <i class="bi {% if professional_skills.first.icon %}
-                        {{ professional_skills.first.icon }}
+                    <i class="bi {% if programming_languages.first.icon %}
+                        {{ programming_languages.first.icon }}
                       {% else %}
-                        bi-tools
+                        
+                        
+                        bi-code-slash
+
+
                       {% endif %}">
 
                     </i>
                   </div>
-                  <h3 class="fw-bolder mb-0"><span class="text-gradient d-inline">Professional Skills</span></h3>
+                  <h3 class="fw-bolder mb-0"><span class="text-gradient d-inline">Languages & Technologies</span></h3>
                 </div>
 
-                <!-- Skills Grid -->
-                <div class="mb-0">
-                  <div class="row row-cols-1 row-cols-md-3 mb-4">
-                    {% for skill in professional_skills %}
-                      <div class="col mb-4 mb-md-4">
-                        <div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">{{ skill.name }}</div>
-                      </div>
-                    {% endfor %}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- Languages Section -->
-          <section>
-            <div class="card shadow border-0 rounded-4 mb-5">
-              <div class="card-body p-5">
-                <!-- Languages list -->
-                <div class="mb-0">
-                  <div class="d-flex align-items-center mb-4">
-                    <div class="feature bg-primary bg-gradient-primary-to-secondary text-white rounded-3 me-3">
-                      <i class="bi {% if programming_languages.first.icon %}
-                          {{ programming_languages.first.icon }}
-                        {% else %}
-                          bi-code-slash
-                        {% endif %}">
-
-                      </i>
+                <!-- Languages Grid -->
+                <div class="row row-cols-1 row-cols-md-3 mb-4">
+                  {% for language in programming_languages %}
+                    <div class="col mb-4 mb-md-4">
+                      <div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">{{ language.name }}</div>
                     </div>
-                    <h3 class="fw-bolder mb-0"><span class="text-gradient d-inline">Languages & Technologies</span></h3>
-                  </div>
-
-                  <!-- Languages Grid -->
-                  <div class="row row-cols-1 row-cols-md-3 mb-4">
-                    {% for language in programming_languages %}
-                      <div class="col mb-4 mb-md-4">
-                        <div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">{{ language.name }}</div>
-                      </div>
-                    {% endfor %}
-                  </div>
+                  {% endfor %}
                 </div>
               </div>
             </div>
-          </section>
-          {% endcache %}
+          </div>
+        </section>
       </div>
-      {% endif %}
     </div>
   </div>
 

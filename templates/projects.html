@@ -1,6 +1,6 @@
 {% extends 'main/body.html' %}
 {% load static %}
-{% load cache %}
+{% comment %} {% load cache %} {% endcomment %}
 
 {% block body_template %}
   {% include 'main/nav.html' %}
@@ -16,7 +16,7 @@
           {% if error %}
             <div class="alert alert-warning">{{ error }}</div>
           {% else %}
-            {% cache 3600 'featured_projects' %}
+            {% comment %} {% cache 3600 'featured_projects' %} {% endcomment %}
             {% for project in featured_projects %}
               <!-- Project Card -->
               <div class="card overflow-hidden shadow rounded-4 border-0 mb-5">
@@ -96,7 +96,7 @@
             {% empty %}
               <div class="alert alert-info text-center text-black" role="alert">No featured projects available at the moment.</div>
             {% endfor %}
-            {% endcache %}
+            {% comment %} {% endcache %} {% endcomment %}
           {% endif %}
         </div>
       </div>
