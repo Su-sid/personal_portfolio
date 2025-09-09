@@ -28,7 +28,6 @@ ALLOWED_HOSTS = ['.vercel.app','127.0.0.1', 'localhost']
 
 
 # Application definition
-
 INSTALLED_APPS = [
 
     'django.contrib.admin',
@@ -74,36 +73,56 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'personal_portfolio.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# DATABASES = {
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': config('DATABASE_NAME'),
+            'USER': config('DATABASE_USER'),
+            'HOST': config('DATABASE_HOST'),
+            'PASSWORD': config('DATABASE_PASSWORD'),
+            'PORT': config('DATABASE_PORT'),
+            'CONN_MAX_AGE': 600,
+            'OPTIONS': {
+                'sslmode': 'require',
+                'client_encoding': 'UTF8',           
+            }
+        }
+    }
+
+# Dev_DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
 
-# Configure your production database 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DATABASE_NAME'),
-        'USER': config('DATABASE_USER'),
-        'HOST': config('DATABASE_HOST'),
-        'PASSWORD': config('DATABASE_PASSWORD'),
-        'PORT': config('DATABASE_PORT'),
-        'CONN_MAX_AGE': 600,
-        'OPTIONS': {
-            'sslmode': 'require',
-            'client_encoding': 'UTF8',           
-        }
-    }
-}
-
-
-
+# # Configure your production database 
+# prod_DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': config('DATABASE_NAME'),
+#         'USER': config('DATABASE_USER'),
+#         'HOST': config('DATABASE_HOST'),
+#         'PASSWORD': config('DATABASE_PASSWORD'),
+#         'PORT': config('DATABASE_PORT'),
+#         'CONN_MAX_AGE': 600,
+#         'OPTIONS': {
+#             'sslmode': 'require',
+#             'client_encoding': 'UTF8',           
+#         }
+#     }
+# }
 
 
 # Password validation

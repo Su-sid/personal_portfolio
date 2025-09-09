@@ -1,8 +1,15 @@
 from django.contrib import admin
 
-from main_app.models import Experience,Education,ProgrammingLanguage,Skill
+from main_app.models import Experience,Education,ProgrammingLanguage,Skill,Project
 
 # Register your models here.
+
+@admin.register(Project)
+class ProjectAdmin(admin.ModelAdmin):
+    list_display = ('title', 'category', 'created_at')
+    list_filter = ('category', 'created_at','technologies_used')
+    search_fields = ('title', 'description')
+
 
 @admin.register(Experience)
 class ExperienceAdmin(admin.ModelAdmin):
