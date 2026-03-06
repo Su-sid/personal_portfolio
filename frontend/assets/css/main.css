@@ -1,0 +1,90 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+:root {
+  font-family: "Manrope", sans-serif;
+}
+
+body {
+  background: #f7f8fb;
+}
+
+.main-shell {
+  @apply min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-100;
+}
+
+.hero-surface {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-pattern {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.11'%3E%3Ccircle cx='10' cy='8' r='1.7'/%3E%3Ccircle cx='58' cy='34' r='1.1'/%3E%3Ccircle cx='112' cy='18' r='1.4'/%3E%3Ccircle cx='170' cy='62' r='1.3'/%3E%3Ccircle cx='34' cy='110' r='1.2'/%3E%3Ccircle cx='90' cy='94' r='1.6'/%3E%3Ccircle cx='148' cy='132' r='1.2'/%3E%3Ccircle cx='204' cy='108' r='1.5'/%3E%3Ccircle cx='42' cy='178' r='1.3'/%3E%3Ccircle cx='118' cy='194' r='1.4'/%3E%3Ccircle cx='186' cy='174' r='1.1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.hero-spotlight {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(520px circle at var(--spot-x, 45%) var(--spot-y, 35%), rgba(56, 189, 248, 0.28), transparent 62%);
+  transition: background 120ms linear;
+}
+
+.card-hover-contrast {
+  @apply transition duration-300 hover:-translate-y-1 hover:border-primary-400 hover:shadow-xl hover:contrast-110;
+}
+
+.process-track {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  transform: translateX(-50%);
+  background: rgb(203 213 225);
+}
+
+.process-track-progress {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 2px;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, #0f172a 0%, #2563eb 35%, #14b8a6 100%);
+  transition: height 120ms linear;
+}
+
+.process-node {
+  @apply absolute z-10 flex h-9 w-9 items-center justify-center rounded-full border-2 text-xs font-bold;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.process-node.active {
+  @apply border-slate-900 bg-slate-900 text-white;
+}
+
+.process-node.inactive {
+  @apply border-slate-300 bg-white text-slate-500;
+}
+
+.timeline-card {
+  @apply rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300;
+}
+
+.timeline-card.active {
+  @apply border-teal-200 bg-teal-50/40 shadow-lg;
+}
+
+.calendly-inline-widget {
+  min-width: 320px;
+  height: 700px;
+}
+
+.hero-about {
+  color: #0f766e;
+}
