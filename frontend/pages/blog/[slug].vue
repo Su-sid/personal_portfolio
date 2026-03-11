@@ -2,11 +2,13 @@
 import type { BlogPostDetail } from "~/types/api"
 
 const route = useRoute()
+// Slug from URL determines which blog post to load.
 const slug = route.params.slug as string
 
 const { apiFetch } = useApi()
 const { data: post } = await useAsyncData(`blog-${slug}`, () => apiFetch<BlogPostDetail>(`/blog/${slug}/`))
 
+// Fail fast for invalid slugs so Nuxt serves a real 404 page.
 if (!post.value) {
   throw createError({ statusCode: 404, statusMessage: "Blog post not found" })
 }
@@ -16,6 +18,7 @@ useSeoMeta({
   description: post.value.excerpt,
 })
 
+// Use uploaded cover image when available, otherwise fallback artwork.
 const blogThumbnail = computed(() => {
   if (post.value?.cover_image_url) return post.value.cover_image_url
   return "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1200&q=80"
@@ -23,11 +26,12 @@ const blogThumbnail = computed(() => {
 </script>
 
 <template>
+  <!-- Blog article detail with metadata badges and full long-form content. -->
   <section class="py-14">
     <UContainer class="max-w-4xl space-y-4">
-      <UButton to="/blog" variant="ghost" color="neutral" icon="i-lucide-arrow-left">Back</UButton>
+      <UButton to="/blog" variant="soft" color="neutral" icon="i-lucide-arrow-left">Back</UButton>
 
-      <UCard class="border-slate-200 card-hover-contrast">
+      <UCard class="surface-card card-hover-contrast">
         <img :src="blogThumbnail" :alt="post?.title" class="h-72 w-full rounded-xl object-cover" />
 
         <div class="mt-5 space-y-4">

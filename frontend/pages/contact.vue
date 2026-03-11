@@ -12,6 +12,7 @@ interface ContactState {
 const { apiFetch } = useApi()
 const { data: config } = await useAsyncData("site-config-contact", () => apiFetch<SiteConfig>("/config/"))
 
+// Load Calendly widget script on the contact page only.
 useHead({
   script: [
     {
@@ -22,6 +23,7 @@ useHead({
   ],
 })
 
+// Keep a default scheduling URL as fallback when config is empty.
 const scheduleUrl = computed(() => config.value?.cta.calendly_url || "https://calendly.com/davidsudi20/30min")
 
 const state = reactive<ContactState>({
@@ -34,6 +36,7 @@ const isSubmitting = ref(false)
 const statusMessage = ref("")
 const statusType = ref<"success" | "error" | "">("")
 
+// Form validation mirrors API-required fields and gives immediate UI feedback.
 const validate = (value: ContactState) => {
   const errors: Array<{ name: keyof ContactState; message: string }> = []
 
@@ -54,6 +57,7 @@ const validate = (value: ContactState) => {
   return errors
 }
 
+// Submit inquiry to backend and reset local state on success.
 const submit = async () => {
   isSubmitting.value = true
   statusMessage.value = ""
@@ -81,14 +85,22 @@ const submit = async () => {
 </script>
 
 <template>
+  <!-- Contact form and embedded scheduler for two conversion paths. -->
   <section class="py-14">
     <UContainer class="space-y-6">
-      <UCard class="border-slate-200 card-hover-contrast">
-        <template #header>
-          <h1 class="text-2xl font-black text-slate-900">Contact Us</h1>
-        </template>
+      <div class="space-y-2">
+        <!-- <h1 class="text-3xl font-black text-slate-900 md:text-4xl">Contact</h1> -->
+        <p class="text-slate-900">Share your project details or book a call to discuss your next build.</p>
+      </div>
 
-        <UForm :state="state" :validate="validate" class="space-y-4" @submit="submit">
+      <UCard class="surface-card card-hover-contrast">
+        <!-- Inquiry form posts directly to the backend contact endpoint. -->
+        <div class="mb-6 space-y-2">
+          <h2 class="text-2xl font-black text-slate-900">Project Inquiry</h2>
+          <p class="text-slate-700">Fill this form and I will reply with a practical next step.</p>
+        </div>
+
+        <UForm :state="state" :validate="validate" class="contact-form space-y-4" @submit="submit">
           <UFormField name="full_name" label="Full Name" required>
             <UInput v-model="state.full_name" placeholder="Your full name" class="w-full" />
           </UFormField>
@@ -101,9 +113,11 @@ const submit = async () => {
             <UTextarea v-model="state.message" :rows="6" placeholder="Share your goals, timeline, and budget range." class="w-full" />
           </UFormField>
 
-          <UButton type="submit" color="primary" variant="solid" size="lg" class="font-bold" :loading="isSubmitting">
-            Send Message
-          </UButton>
+          <div class="flex justify-end">
+            <UButton type="submit" color="primary" variant="solid" size="lg" class="font-bold" :loading="isSubmitting">
+              Send Message
+            </UButton>
+          </div>
 
           <p v-if="statusMessage" :class="statusType === 'success' ? 'text-emerald-700' : 'text-red-700'" class="font-medium">
             {{ statusMessage }}
@@ -111,10 +125,12 @@ const submit = async () => {
         </UForm>
       </UCard>
 
-      <UCard class="border-slate-200 card-hover-contrast">
-        <template #header>
-          <h2 class="text-xl font-bold text-slate-900">Schedule a Free Consultation</h2>
-        </template>
+      <UCard class="surface-card card-hover-contrast">
+        <!-- Calendly iframe-like widget (script-initialized) for direct bookings. -->
+        <div class="mb-6 space-y-2">
+          <h2 class="text-2xl font-black text-slate-900">Schedule a Free Consultation</h2>
+          <p class="text-slate-700">Pick a time that works for you and we will go through your requirements live.</p>
+        </div>
 
         <div class="calendly-inline-widget" :data-url="scheduleUrl" style="min-width:320px;height:700px;" />
       </UCard>

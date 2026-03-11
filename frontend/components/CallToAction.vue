@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// Optional overrides let pages customize CTA copy without duplicating component layout.
 defineProps<{
   title?: string
   description?: string
@@ -6,6 +7,7 @@ defineProps<{
 </script>
 
 <template>
+  <!-- Reusable CTA block used at the end of major pages. -->
   <section class="py-10">
     <UContainer>
       <UCard class="overflow-hidden border-slate-900/15 bg-gradient-to-r from-slate-900 to-slate-700 text-white card-hover-contrast">

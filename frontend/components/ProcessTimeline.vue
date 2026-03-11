@@ -42,17 +42,19 @@ const steps: ProcessStep[] = [
 const timelineRef = ref<HTMLElement | null>(null)
 const progress = ref(0)
 
+// Convert scroll position to 0..1 progress used by the vertical track and nodes.
 const updateProgress = () => {
   if (!timelineRef.value || !import.meta.client) return
 
   const rect = timelineRef.value.getBoundingClientRect()
   const viewport = window.innerHeight
-  const start = viewport * 0.2
+  const start = viewport * 0.5
   const end = rect.height + viewport * 0.35
   const ratio = (start - rect.top) / end
   progress.value = Math.max(0, Math.min(1, ratio))
 }
 
+// Marks each step active once scroll progress reaches its position threshold.
 const isActive = (index: number) => {
   if (steps.length <= 1) return progress.value > 0
   const threshold = index / (steps.length - 1)
@@ -74,6 +76,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
+  <!-- Alternating timeline cards with a central progress rail. -->
   <section class="py-16">
     <UContainer>
       <div class="mb-8 flex flex-col items-center gap-3 text-center">

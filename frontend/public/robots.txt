@@ -1,2 +1,8 @@
+# robots.txt for personal portfolio site
+# Allow all crawlers and specify sitemap
+
 User-Agent: *
 Disallow:
+
+# Sitemap for the Nuxt frontend (assuming generated at /sitemap.xml)
+Sitemap: https://sudi.onesud.com/sitemap.xml

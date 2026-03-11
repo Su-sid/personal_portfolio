@@ -2,6 +2,7 @@ export interface ServiceItem {
   id: number
   title: string
   summary: string
+  excerpt: string
   description: string
   icon: string
   display_order: number
@@ -17,6 +18,7 @@ export interface TechnologyItem {
 export interface ProjectItem {
   id: number
   title: string
+  excerpt: string
   description: string
   category: string
   github_link: string | null
@@ -65,6 +67,7 @@ export interface SiteConfig {
 
 export interface LandingPayload {
   services: ServiceItem[]
+  services_has_more: boolean
   featured_projects: ProjectItem[]
   latest_posts: BlogListItem[]
 }

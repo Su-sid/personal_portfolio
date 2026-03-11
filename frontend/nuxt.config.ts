@@ -1,7 +1,7 @@
 export default defineNuxtConfig({
   compatibilityDate: "2026-03-07",
   srcDir: ".",
-  devtools: { enabled: true },
+  devtools: { enabled: process.env.NUXT_DEVTOOLS === "true" || process.env.NODE_ENV !== "production" },
   modules: ["@nuxt/ui"],
   css: ["~/assets/css/main.css"],
   runtimeConfig: {
@@ -13,11 +13,11 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      titleTemplate: "%s | David Sudi",
+      titleTemplate: "%s | Sudi",
       meta: [
         {
           name: "description",
-          content: "Portfolio website for David Sudi - software developer focused on high-performing products and AI solutions.",
+          content: "Portfolio website for David Sudi - software developer focused on delivering high-performing custom software and AI solutions.",
         },
       ],
       link: [

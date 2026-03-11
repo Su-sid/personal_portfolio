@@ -81,23 +81,61 @@ npm run dev
 
 Frontend local URL: `http://localhost:3000`
 
-## Docker Compose (recommended local full-stack check)
+## Docker Compose
+
+### Dev profile (hot reload)
 
 1. Ensure these files exist:
-- `backend/.env.docker` (copy from `.env.docker.example`)
-- `frontend/.env`
+- `backend/.env.docker` (copy from `backend/.env.docker.example`)
+- `frontend/.env` (copy from `frontend/.env.example`)
 
-2. Start stack:
+2. Start dev stack:
 
 ```bash
 docker compose up --build
 ```
 
 Services:
-- Frontend: `http://localhost:3000`
-- Backend API: `http://localhost:8000/api/`
+- Frontend (Nuxt dev): `http://localhost:3000`
+- Backend API (Django runserver): `http://localhost:8000/api/`
 - Django admin: `http://localhost:8000/admin/`
 - PostgreSQL: `localhost:5432`
+
+### Production profile (Nginx + Gunicorn + Nuxt SSR)
+
+This profile uses:
+- **Nginx** as reverse proxy/edge
+- **Gunicorn** for Django WSGI
+- **Nuxt SSR runtime** (`node .output/server/index.mjs`)
+
+1. Set production env values (at minimum):
+- `backend/.env.docker`: set `DEBUG=False`, a strong `SECRET_KEY`, production `ALLOWED_HOSTS`, and trusted origins.
+- `frontend/.env`: set public metadata such as `NUXT_PUBLIC_SITE_NAME`.
+
+`docker-compose` already pins production API routing to:
+- `API_BASE_URL=http://backend-prod:8000/api`
+- `NUXT_PUBLIC_API_BASE_URL=/api`
+
+Production-oriented examples are included:
+- `backend/.env.production.example`
+- `frontend/.env.production.example`
+
+2. Build and run production profile via Nginx entrypoint service:
+
+```bash
+docker compose --profile prod up --build -d nginx
+```
+
+3. Validate:
+- App through Nginx: `http://localhost/`
+- API through Nginx: `http://localhost/api/health/`
+- Nginx health: `http://localhost/healthz`
+
+4. Stop:
+
+```bash
+docker compose --profile prod down
+```
 
 ## Testing
 

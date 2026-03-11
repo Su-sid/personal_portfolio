@@ -57,6 +57,13 @@ class ServiceListView(generics.ListAPIView):
         return Service.objects.filter(is_featured=True)
 
 
+class ServiceDetailView(generics.RetrieveAPIView):
+    serializer_class = ServiceSerializer
+
+    def get_queryset(self):
+        return Service.objects.filter(is_featured=True)
+
+
 class ProjectListView(generics.ListAPIView):
     serializer_class = ProjectSerializer
 
@@ -69,6 +76,13 @@ class ProjectListView(generics.ListAPIView):
         if category:
             queryset = queryset.filter(category=category)
         return queryset
+
+
+class ProjectDetailView(generics.RetrieveAPIView):
+    serializer_class = ProjectSerializer
+
+    def get_queryset(self):
+        return Project.objects.prefetch_related("technologies_used")
 
 
 class ResumeView(APIView):
@@ -120,12 +134,14 @@ class BlogPostDetailView(generics.RetrieveAPIView):
 class PortfolioLandingView(APIView):
     def get(self, request):
         latest_posts = BlogPost.objects.filter(is_published=True)[:3]
-        featured_projects = Project.objects.filter(is_featured=True).prefetch_related("technologies_used")[:6]
-        services = Service.objects.filter(is_featured=True)[:6]
+        featured_projects = Project.objects.filter(is_featured=True).prefetch_related("technologies_used")[:3]
+        services_queryset = Service.objects.filter(is_featured=True).order_by("-id")
+        services = services_queryset[:6]
 
         return Response(
             {
                 "services": ServiceSerializer(services, many=True).data,
+                "services_has_more": services_queryset.count() > 6,
                 "featured_projects": ProjectSerializer(
                     featured_projects, many=True, context={"request": request}
                 ).data,

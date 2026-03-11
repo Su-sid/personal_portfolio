@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.utils.text import Truncator
 
 from .models import (
     BlogPost,
@@ -22,12 +23,14 @@ class TechnologySerializer(serializers.ModelSerializer):
 class ProjectSerializer(serializers.ModelSerializer):
     technologies_used = TechnologySerializer(many=True, read_only=True)
     image_url = serializers.SerializerMethodField()
+    excerpt = serializers.SerializerMethodField()
 
     class Meta:
         model = Project
         fields = (
             "id",
             "title",
+            "excerpt",
             "description",
             "category",
             "github_link",
@@ -44,19 +47,30 @@ class ProjectSerializer(serializers.ModelSerializer):
             return None
         return request.build_absolute_uri(obj.image.url) if request else obj.image.url
 
+    def get_excerpt(self, obj: Project):
+        return Truncator(obj.description).words(24)
+
 
 class ServiceSerializer(serializers.ModelSerializer):
+    excerpt = serializers.SerializerMethodField()
+
     class Meta:
         model = Service
         fields = (
             "id",
             "title",
             "summary",
+            "excerpt",
             "description",
             "icon",
             "display_order",
             "is_featured",
         )
+
+    def get_excerpt(self, obj: Service):
+        if obj.summary:
+            return obj.summary
+        return Truncator(obj.description).words(24)
 
 
 class ExperienceSerializer(serializers.ModelSerializer):
