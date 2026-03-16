@@ -21,7 +21,7 @@ useSeoMeta({
 // Use uploaded cover image when available, otherwise fallback artwork.
 const blogThumbnail = computed(() => {
   if (post.value?.cover_image_url) return post.value.cover_image_url
-  return "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1200&q=80"
+  return "/images/placeholders/blog.svg"
 })
 </script>
 

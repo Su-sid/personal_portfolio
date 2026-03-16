@@ -1,8 +1,16 @@
+from django.core.management import call_command
+from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from main_app.models import BlogPost, ContactInquiry, Project, Service
+from main_app.models import (
+    BlogPost,
+    ContactInquiry,
+    Project,
+    Service,
+    Technology,
+)
 
 
 class PortfolioApiTests(APITestCase):
@@ -48,3 +56,35 @@ class PortfolioApiTests(APITestCase):
         response = self.client.post(reverse("api-contact"), payload, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(ContactInquiry.objects.count(), 1)
+
+
+class SeedCommandTests(TestCase):
+    def test_seed_projects_is_idempotent(self):
+        call_command("seed_projects")
+        call_command("seed_projects")
+
+        self.assertEqual(Project.objects.count(), 3)
+        self.assertEqual(Project.objects.filter(is_featured=True).count(), 3)
+        self.assertGreaterEqual(Technology.objects.count(), 5)
+        self.assertTrue(
+            all(project.technologies_used.exists() for project in Project.objects.all())
+        )
+
+    def test_seed_site_content_is_idempotent(self):
+        call_command("seed_site_content")
+        call_command("seed_site_content")
+
+        self.assertEqual(Service.objects.count(), 3)
+        self.assertEqual(BlogPost.objects.filter(is_published=True).count(), 3)
+        self.assertTrue(
+            all(
+                service.icon.startswith("i-lucide-")
+                for service in Service.objects.all()
+            )
+        )
+        self.assertTrue(
+            all(
+                len(service.description.split()) > 20
+                for service in Service.objects.all()
+            )
+        )

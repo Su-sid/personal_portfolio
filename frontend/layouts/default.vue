@@ -2,8 +2,15 @@
 import type { SiteConfig } from "~/types/api"
 
 const { apiFetch } = useApi()
-// Pull global CTA settings once for all pages rendered inside this layout.
-const { data: config } = await useAsyncData("site-config", () => apiFetch<SiteConfig>("/config/"))
+const cachedConfig = useNuxtData<SiteConfig | null>("site-config")
+// Avoid blocking SSR on layout-only config. Pages that need config for visible
+// content still fetch it server-side using the same async-data key.
+const { data: config } = useAsyncData("site-config", () => apiFetch<SiteConfig>("/config/"), {
+  default: () => cachedConfig.data.value ?? null,
+  server: false,
+  lazy: true,
+  immediate: !cachedConfig.data.value,
+})
 
 // Build WhatsApp deep-link with optional prefilled message from site config.
 const whatsappLink = computed(() => {

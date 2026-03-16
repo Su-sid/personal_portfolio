@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">Blog placeholder</title>
+  <desc id="desc">Abstract placeholder art for a blog card.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#172554" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="720" fill="url(#bg)" />
+  <rect x="120" y="120" width="960" height="480" rx="32" fill="#0f172a" fill-opacity=".28" stroke="#cbd5e1" stroke-opacity=".22" />
+  <rect x="180" y="180" width="190" height="250" rx="18" fill="#e2e8f0" fill-opacity=".12" />
+  <rect x="430" y="190" width="470" height="26" rx="13" fill="#f8fafc" fill-opacity=".9" />
+  <rect x="430" y="246" width="290" height="18" rx="9" fill="#cbd5e1" fill-opacity=".76" />
+  <rect x="430" y="324" width="540" height="16" rx="8" fill="#e2e8f0" fill-opacity=".52" />
+  <rect x="430" y="364" width="500" height="16" rx="8" fill="#e2e8f0" fill-opacity=".52" />
+  <rect x="430" y="404" width="420" height="16" rx="8" fill="#e2e8f0" fill-opacity=".52" />
+  <rect x="430" y="474" width="160" height="42" rx="14" fill="#38bdf8" fill-opacity=".42" />
+</svg>

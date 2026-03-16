@@ -4,12 +4,8 @@ from django.utils.text import Truncator
 from .models import (
     BlogPost,
     ContactInquiry,
-    Education,
-    Experience,
-    ProgrammingLanguage,
     Project,
     Service,
-    Skill,
     Technology,
 )
 
@@ -73,52 +69,6 @@ class ServiceSerializer(serializers.ModelSerializer):
         return Truncator(obj.description).words(24)
 
 
-class ExperienceSerializer(serializers.ModelSerializer):
-    duration = serializers.FloatField(read_only=True)
-
-    class Meta:
-        model = Experience
-        fields = (
-            "id",
-            "start_date",
-            "end_date",
-            "is_current",
-            "job_title",
-            "company",
-            "location",
-            "description",
-            "duration",
-            "is_short",
-        )
-
-
-class EducationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Education
-        fields = (
-            "id",
-            "start_date",
-            "end_date",
-            "institution",
-            "location",
-            "degree_type",
-            "field_of_study",
-            "description",
-        )
-
-
-class SkillSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Skill
-        fields = ("id", "name", "category", "icon")
-
-
-class ProgrammingLanguageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProgrammingLanguage
-        fields = ("id", "name", "icon")
-
-
 class BlogPostListSerializer(serializers.ModelSerializer):
     tags = serializers.SerializerMethodField()
     cover_image_url = serializers.SerializerMethodField()
@@ -143,7 +93,11 @@ class BlogPostListSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         if not obj.cover_image:
             return None
-        return request.build_absolute_uri(obj.cover_image.url) if request else obj.cover_image.url
+        return (
+            request.build_absolute_uri(obj.cover_image.url)
+            if request
+            else obj.cover_image.url
+        )
 
 
 class BlogPostDetailSerializer(BlogPostListSerializer):

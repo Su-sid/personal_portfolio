@@ -67,7 +67,9 @@ DATABASES = {
 }
 
 AUTH_PASSWORD_VALIDATORS = [
-    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
+    {
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
+    },
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
@@ -95,18 +97,26 @@ STORAGES = {
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default=["http://localhost:3000"])
+CORS_ALLOWED_ORIGINS = env.list(
+    "CORS_ALLOWED_ORIGINS", default=["http://localhost:3000"]
+)
 CORS_ALLOW_CREDENTIALS = True
 
 USE_X_FORWARDED_HOST = env.bool("USE_X_FORWARDED_HOST", default=False)
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https") if env.bool("USE_X_FORWARDED_PROTO", default=False) else None
+SECURE_PROXY_SSL_HEADER = (
+    ("HTTP_X_FORWARDED_PROTO", "https")
+    if env.bool("USE_X_FORWARDED_PROTO", default=False)
+    else None
+)
 
 SECURE_SSL_REDIRECT = env.bool("SECURE_SSL_REDIRECT", default=False)
 SESSION_COOKIE_SECURE = env.bool("SESSION_COOKIE_SECURE", default=not DEBUG)
 CSRF_COOKIE_SECURE = env.bool("CSRF_COOKIE_SECURE", default=not DEBUG)
 
 SECURE_HSTS_SECONDS = env.int("SECURE_HSTS_SECONDS", default=0)
-SECURE_HSTS_INCLUDE_SUBDOMAINS = env.bool("SECURE_HSTS_INCLUDE_SUBDOMAINS", default=False)
+SECURE_HSTS_INCLUDE_SUBDOMAINS = env.bool(
+    "SECURE_HSTS_INCLUDE_SUBDOMAINS", default=False
+)
 SECURE_HSTS_PRELOAD = env.bool("SECURE_HSTS_PRELOAD", default=False)
 SECURE_CONTENT_TYPE_NOSNIFF = env.bool("SECURE_CONTENT_TYPE_NOSNIFF", default=True)
 
@@ -116,7 +126,9 @@ REST_FRAMEWORK = {
     ],
 }
 
-EMAIL_BACKEND = env("EMAIL_BACKEND", default="django.core.mail.backends.smtp.EmailBackend")
+EMAIL_BACKEND = env(
+    "EMAIL_BACKEND", default="django.core.mail.backends.smtp.EmailBackend"
+)
 EMAIL_HOST = env("EMAIL_HOST", default="")
 EMAIL_PORT = env.int("EMAIL_PORT", default=587)
 EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="")
@@ -127,7 +139,10 @@ CONTACT_EMAIL = env("CONTACT_EMAIL", default="")
 
 SITE_OWNER_NAME = env("SITE_OWNER_NAME", default="David Sudi")
 SITE_OWNER_TITLE = env("SITE_OWNER_TITLE", default="Software Developer")
-SITE_TAGLINE = env("SITE_TAGLINE", default="I build web platforms and AI-powered tools that ship business results.")
+SITE_TAGLINE = env(
+    "SITE_TAGLINE",
+    default="I build web platforms and AI-powered tools that ship business results.",
+)
 SITE_ABOUT = env(
     "SITE_ABOUT",
     default=(
@@ -138,7 +153,9 @@ SITE_ABOUT = env(
 
 CALENDLY_URL = env("CALENDLY_URL", default="https://calendly.com/davidsudi20/30min")
 WHATSAPP_NUMBER = env("WHATSAPP_NUMBER", default="")
-WHATSAPP_DEFAULT_TEXT = env("WHATSAPP_DEFAULT_TEXT", default="Hi David, I would like to discuss a project.")
+WHATSAPP_DEFAULT_TEXT = env(
+    "WHATSAPP_DEFAULT_TEXT", default="Hi David, I would like to discuss a project."
+)
 
 SOCIAL_LINKEDIN_URL = env("SOCIAL_LINKEDIN_URL", default="")
 SOCIAL_GITHUB_URL = env("SOCIAL_GITHUB_URL", default="")

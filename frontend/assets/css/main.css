@@ -2,7 +2,7 @@
 @import "@nuxt/ui";
 
 :root {
-  font-family: "Manrope", sans-serif;
+  font-family: "Manrope", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 body {
@@ -10,7 +10,7 @@ body {
 }
 
 .main-shell {
-  @apply min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-100;
+  @apply min-h-screen bg-linear-to-b from-slate-50 via-white to-slate-100;
 }
 
 .hero-surface {
@@ -120,11 +120,13 @@ body {
 }
 
 @keyframes star-breathe {
+
   0%,
   100% {
     opacity: var(--star-min-opacity, 0.35);
     transform: scale(1);
   }
+
   50% {
     opacity: 1;
     transform: scale(1.8);
@@ -136,10 +138,12 @@ body {
     border-color: #17e6a4;
     box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.65);
   }
+
   60% {
     border-color: #34d399;
     box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
   }
+
   100% {
     border-color: #86ffdd;
     box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);

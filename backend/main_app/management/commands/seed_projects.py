@@ -1,89 +1,140 @@
-import os
 from django.core.management.base import BaseCommand
-from django.core.files import File
-from django.conf import settings
+from django.db import transaction
 
-from main_app.models import Technology, Project
+from main_app.models import Project, Technology
+
+TECHNOLOGY_SEEDS = {
+    "Nuxt": {"icon": "bi-lightning-charge"},
+    "Vue": {"icon": "bi-code-slash"},
+    "Django": {"icon": "bi-grid-3x3-gap"},
+    "Python": {"icon": "bi-filetype-py"},
+    "PostgreSQL": {"icon": "bi-database"},
+    "Docker": {"icon": "bi-box-seam"},
+    "GitHub Actions": {"icon": "bi-github"},
+    "LangChain": {"icon": "bi-bezier2"},
+    "OpenAI API": {"icon": "bi-stars"},
+    "FastAPI": {"icon": "bi-diagram-3"},
+    "Pandas": {"icon": "bi-bar-chart"},
+    "SQL": {"icon": "bi-database-gear"},
+}
+
+PROJECT_SEEDS = (
+    {
+        "title": "Portfolio Platform",
+        "description": (
+            "A full-stack portfolio platform that pairs a Nuxt SSR frontend with a Django API and admin workflow.\n\n"
+            "The product is structured around services, case studies, writing, and direct inquiry capture so the public site and "
+            "the content model stay aligned.\n\n"
+            "Deployment is containerized with Docker Compose, which keeps the production stack predictable and makes CI/CD into "
+            "Coolify straightforward."
+        ),
+        "category": "web",
+        "is_featured": True,
+        "github_link": None,
+        "live_demo_link": None,
+        "technologies": (
+            "Nuxt",
+            "Vue",
+            "Django",
+            "Python",
+            "PostgreSQL",
+            "Docker",
+            "GitHub Actions",
+        ),
+    },
+    {
+        "title": "AI Workflow Assistant",
+        "description": (
+            "An AI-assisted operations workflow built to turn messy project requests into structured next actions.\n\n"
+            "The system combines prompt-driven extraction, validation, and routing so delivery teams can respond faster without "
+            "introducing opaque automation.\n\n"
+            "The implementation favors constrained workflows, review checkpoints, and observable outputs instead of trying to "
+            "hide the decision process behind a single model call."
+        ),
+        "category": "ai",
+        "is_featured": True,
+        "github_link": None,
+        "live_demo_link": None,
+        "technologies": (
+            "Python",
+            "LangChain",
+            "OpenAI API",
+            "FastAPI",
+            "PostgreSQL",
+            "Docker",
+        ),
+    },
+    {
+        "title": "Delivery Reporting Workspace",
+        "description": (
+            "A reporting workspace for surfacing delivery health, commercial signals, and operational bottlenecks in one place.\n\n"
+            "It consolidates project data into readable summaries for founders and stakeholders, with an emphasis on trend visibility "
+            "instead of dashboard noise.\n\n"
+            "The result is a lightweight analytics layer that supports better planning conversations without adding heavy process."
+        ),
+        "category": "data",
+        "is_featured": True,
+        "github_link": None,
+        "live_demo_link": None,
+        "technologies": (
+            "Python",
+            "Pandas",
+            "SQL",
+            "PostgreSQL",
+            "Docker",
+        ),
+    },
+)
+
 
 class Command(BaseCommand):
-    help = 'Seeds the database with initial project and technology data from David Sudi\'s CV'
+    help = "Seed featured projects and supporting technologies for the current portfolio frontend."
 
-    def handle(self, *args, **kwargs):
-        # First, clear existing data to avoid duplicates
-        Project.objects.all().delete()
-        Technology.objects.all().delete()
-        
-        self.stdout.write("Cleared existing project and technology data.")
-
-        # Create Technologies based on CV
-        technologies_to_create = [
-            Technology(name='Python', icon='fab fa-python'),
-            Technology(name='React', icon='fab fa-react'),
-            Technology(name='Next.js', icon='fas fa-code-branch'),
-            Technology(name='Redux', icon='fas fa-sync'),
-            Technology(name='Jest', icon='fas fa-vial'),
-            Technology(name='Cypress', icon='fas fa-flask'),
-            Technology(name='LangChain', icon='fas fa-robot'),
-            Technology(name='Playwright', icon='fas fa-cogs'),
-            Technology(name='HTML/CSS', icon='fab fa-html5'),
-            Technology(name='PostgreSQL', icon='fas fa-database'),
-            Technology(name='PHP', icon='fab fa-php'),
-            Technology(name='Laravel', icon='fab fa-laravel'),
-            Technology(name='Git', icon='fab fa-git-alt'),
-            Technology(name='GitHub Actions', icon='fas fa-tasks'),
-            Technology(name='NLP', icon='fas fa-comments'),
-            Technology(name='Data Analysis', icon='fas fa-chart-bar'),
-            Technology(name='Machine Learning', icon='fas fa-brain')
-        ]
-        
-        created_technologies = {tech.name: tech for tech in Technology.objects.bulk_create(technologies_to_create)}
-        self.stdout.write(self.style.SUCCESS('Successfully created all technologies.'))
-
-        # Create Projects based on CV
-        projects_to_create = [
-            Project(
-                title='Bazar',
-                description='An Afro chatbot that processed collected datasets to provide intelligent house and car recommendations for the Bazar website.',
-                category='ai',
-                is_featured=True
-            ),
-            Project(
-                title='Car Manuals RAG System',
-                description='A Retrieval-Augmented Generation (RAG) system for car manuals. This project likely involves implementing text analysis solutions and information extraction from unstructured data, as mentioned in the CV.',
-                category='ai',
-                is_featured=True
-            ),
-            Project(
-                title='High Risk Taxpayer Prediction Model',
-                description='A machine learning model designed to predict high-risk taxpayers. This project demonstrates skills in data analysis, machine learning, and data visualization.',
-                category='data',
-                is_featured=False
-            ),
-        ]
-
-        created_projects = Project.objects.bulk_create(projects_to_create)
-        self.stdout.write(self.style.SUCCESS('Successfully created all projects.'))
-        
-        # Add technologies to projects
-        project_bazar = Project.objects.get(title='Bazar')
-        project_bazar.technologies_used.add(
-            created_technologies['Python'],
-            created_technologies['LangChain'],
-            created_technologies['NLP']
-        )
-        
-        project_car_manuals = Project.objects.get(title='Car Manuals RAG System')
-        project_car_manuals.technologies_used.add(
-            created_technologies['Python'],
-            created_technologies['LangChain'],
-            created_technologies['NLP']
-        )
-        
-        project_taxpayer_model = Project.objects.get(title='High Risk Taxpayer Prediction Model')
-        project_taxpayer_model.technologies_used.add(
-            created_technologies['Python'],
-            created_technologies['Machine Learning'],
-            created_technologies['Data Analysis']
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "--prune",
+            action="store_true",
+            help="Delete projects that are not part of the current seed set.",
         )
 
-        self.stdout.write(self.style.SUCCESS('Successfully seeded database with project data from CV.'))
+    @transaction.atomic
+    def handle(self, *args, **options):
+        seeded_titles = []
+        technology_map = {}
+
+        for name, defaults in TECHNOLOGY_SEEDS.items():
+            technology, _ = Technology.objects.update_or_create(
+                name=name,
+                defaults=defaults,
+            )
+            technology_map[name] = technology
+
+        for payload in PROJECT_SEEDS:
+            project, _ = Project.objects.update_or_create(
+                title=payload["title"],
+                defaults={
+                    "description": payload["description"],
+                    "category": payload["category"],
+                    "is_featured": payload["is_featured"],
+                    "github_link": payload["github_link"],
+                    "live_demo_link": payload["live_demo_link"],
+                },
+            )
+            project.technologies_used.set(
+                [technology_map[name] for name in payload["technologies"]]
+            )
+            seeded_titles.append(project.title)
+
+        pruned_count = 0
+        if options["prune"]:
+            pruned_count, _ = Project.objects.exclude(title__in=seeded_titles).delete()
+
+        self.stdout.write(
+            self.style.SUCCESS(
+                f"Seeded {len(PROJECT_SEEDS)} projects and {len(TECHNOLOGY_SEEDS)} technologies."
+            )
+        )
+        if options["prune"]:
+            self.stdout.write(
+                self.style.SUCCESS(f"Pruned {pruned_count} stale projects.")
+            )

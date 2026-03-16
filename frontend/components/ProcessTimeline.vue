@@ -41,6 +41,7 @@ const steps: ProcessStep[] = [
 
 const timelineRef = ref<HTMLElement | null>(null)
 const progress = ref(0)
+let frame = 0
 
 // Convert scroll position to 0..1 progress used by the vertical track and nodes.
 const updateProgress = () => {
@@ -61,17 +62,26 @@ const isActive = (index: number) => {
   return progress.value >= threshold
 }
 
+const scheduleProgressUpdate = () => {
+  if (frame) return
+  frame = window.requestAnimationFrame(() => {
+    frame = 0
+    updateProgress()
+  })
+}
+
 onMounted(() => {
   updateProgress()
-  window.addEventListener("scroll", updateProgress, { passive: true })
-  window.addEventListener("resize", updateProgress)
-  window.addEventListener("mousemove", updateProgress)
+  window.addEventListener("scroll", scheduleProgressUpdate, { passive: true })
+  window.addEventListener("resize", scheduleProgressUpdate)
 })
 
 onBeforeUnmount(() => {
-  window.removeEventListener("scroll", updateProgress)
-  window.removeEventListener("resize", updateProgress)
-  window.removeEventListener("mousemove", updateProgress)
+  if (frame) {
+    window.cancelAnimationFrame(frame)
+  }
+  window.removeEventListener("scroll", scheduleProgressUpdate)
+  window.removeEventListener("resize", scheduleProgressUpdate)
 })
 </script>
 

@@ -1,7 +1,7 @@
 <template>
   <!-- Hero section with animated background and interactive spotlight. -->
   <section ref="heroRef"
-    class="hero-surface border-b border-slate-200 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 text-white"
+    class="hero-surface border-b border-slate-200 bg-linear-to-br from-slate-950 via-slate-900 to-slate-800 text-white"
     :style="{ '--spot-x': `${spot.x}%`, '--spot-y': `${spot.y}%` }" @mousemove="handleHeroMove"
     @mouseleave="resetHeroSpotlight">
     <div class="hero-pattern">
@@ -80,7 +80,13 @@
             body: 'p-4 sm:p-6',
             footer: 'p-4 sm:px-6'
           }">
-            <img :src="serviceImage(service)" :alt="service.title" class="h-44 w-full rounded-xl object-cover mb-4" />
+            <img
+              :src="serviceImage(service)"
+              :alt="service.title"
+              class="mb-4 h-44 w-full rounded-xl object-cover"
+              loading="lazy"
+              decoding="async"
+            />
 
             <div>
               <h3 class="text-lg font-bold text-slate-900">
@@ -120,7 +126,13 @@
         <NuxtLink v-for="project in landing?.featured_projects" :key="project.id" :to="`/projects/${project.id}`"
           class="group block">
           <UCard class="surface-card h-full overflow-hidden card-hover-contrast">
-            <img :src="projectThumbnail(project)" :alt="project.title" class="h-52 w-full rounded-xl object-cover" />
+            <img
+              :src="projectThumbnail(project)"
+              :alt="project.title"
+              class="h-52 w-full rounded-xl object-cover"
+              loading="lazy"
+              decoding="async"
+            />
             <div class="mt-4 space-y-3">
               <h3 class="text-xl font-bold text-slate-900">{{ project.title }}</h3>
               <p class="text-sm text-slate-900/85">{{ project.excerpt }}</p>
@@ -146,7 +158,13 @@
       <div class="grid gap-6 md:grid-cols-3">
         <NuxtLink v-for="post in landing?.latest_posts" :key="post.id" :to="`/blog/${post.slug}`" class="group block">
           <UCard class="surface-card h-full overflow-hidden card-hover-contrast">
-            <img :src="blogThumbnail(post)" :alt="post.title" class="h-44 w-full rounded-xl object-cover" />
+            <img
+              :src="blogThumbnail(post)"
+              :alt="post.title"
+              class="h-44 w-full rounded-xl object-cover"
+              loading="lazy"
+              decoding="async"
+            />
             <div class="mt-4 space-y-3">
               <h3 class="text-lg font-bold text-slate-900">{{ post.title }}</h3>
               <p class="text-sm text-slate-900/85">{{ post.excerpt }}</p>
@@ -175,14 +193,18 @@ const { apiFetch } = useApi()
 
 // Load site profile copy and landing collections together to reduce page wait time.
 const [{ data: config }, { data: landing }] = await Promise.all([
-  useAsyncData("site-config-home", () => apiFetch<SiteConfig>("/config/")),
+  useAsyncData("site-config", () => apiFetch<SiteConfig>("/config/"), {
+    dedupe: "defer",
+  }),
   useAsyncData("landing", () => apiFetch<LandingPayload>("/landing/")),
 ])
 
 const heroRef = ref<HTMLElement | null>(null)
 const spot = reactive({ x: 45, y: 35 })
+let spotlightFrame = 0
+let pendingSpot = { x: 45, y: 35 }
 // Pre-compute decorative stars so the template stays lightweight.
-const heroStars = Array.from({ length: 120 }, (_, index) => {
+const heroStars = Array.from({ length: 64 }, (_, index) => {
   const id = index + 1
   return {
     id,
@@ -201,40 +223,40 @@ const handleHeroMove = (event: MouseEvent) => {
   const rect = heroRef.value.getBoundingClientRect()
   if (!rect.width || !rect.height) return
 
-  spot.x = Math.max(0, Math.min(100, ((event.clientX - rect.left) / rect.width) * 100))
-  spot.y = Math.max(0, Math.min(100, ((event.clientY - rect.top) / rect.height) * 100))
+  pendingSpot = {
+    x: Math.max(0, Math.min(100, ((event.clientX - rect.left) / rect.width) * 100)),
+    y: Math.max(0, Math.min(100, ((event.clientY - rect.top) / rect.height) * 100)),
+  }
+
+  if (spotlightFrame) return
+  spotlightFrame = window.requestAnimationFrame(() => {
+    spotlightFrame = 0
+    spot.x = pendingSpot.x
+    spot.y = pendingSpot.y
+  })
 }
 
 const resetHeroSpotlight = () => {
+  if (spotlightFrame) {
+    window.cancelAnimationFrame(spotlightFrame)
+    spotlightFrame = 0
+  }
   spot.x = 45
   spot.y = 35
+  pendingSpot = { x: 45, y: 35 }
 }
 
-// Image helper for service cards with semantic fallbacks by service theme.
-const serviceImage = (service: ServiceItem) => {
-  const key = `${service.title} ${service.summary}`.toLowerCase()
-  if (key.includes("ai") || key.includes("automation")) {
-    return "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1200&q=80"
-  }
-  if (key.includes("consult")) {
-    return "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80"
-  }
-  return "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=1200&q=80"
-}
+const serviceImage = (_service: ServiceItem) => "/images/placeholders/service.svg"
 
-// Use uploaded media first, then live/github preview, then a generic fallback.
+// Keep project thumbnails local when no uploaded image exists.
 const projectThumbnail = (project: ProjectItem) => {
   if (project.image_url) return project.image_url
-  const sourceUrl = project.live_demo_link || project.github_link
-  if (sourceUrl) {
-    return `https://image.thum.io/get/width/1200/crop/800/noanimate/${sourceUrl}`
-  }
-  return "https://images.unsplash.com/photo-1518773553398-650c184e0bb3?auto=format&fit=crop&w=1200&q=80"
+  return "/images/placeholders/project.svg"
 }
 
 // Blog cards use a stable fallback image when no cover image is uploaded.
 const blogThumbnail = (post: BlogListItem) => {
   if (post.cover_image_url) return post.cover_image_url
-  return "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1200&q=80"
+  return "/images/placeholders/blog.svg"
 }
 </script>

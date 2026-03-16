@@ -4,7 +4,9 @@ from django.urls import include, path
 
 
 def root_status(_request):
-    return JsonResponse({"service": "personal-portfolio-backend", "docs": "/api/health/"})
+    return JsonResponse(
+        {"service": "personal-portfolio-backend", "docs": "/api/health/"}
+    )
 
 
 urlpatterns = [

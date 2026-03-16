@@ -2,8 +2,8 @@
 {% load static %}
 {% load cache %}
 {% block body_template %}
-  {% url 'resume' as resume %}
   {% url 'projects' as projects %}
+  {% url 'contacts' as contacts %}
   <main class="flex-shrink-0">
     <!-- Navigation -->
     {% include 'main/nav.html' %}
@@ -23,7 +23,7 @@
             <h1 class="display-3 fw-bolder"><span class="text-gradient d-inline">I am Sudi</span></h1>
             <div class="fs-3 fw-light text-dark mb-3">I help brands get online and grow fast</div>
             <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xxl-start mb-3">
-              <a class="btn btn-primary btn-lg px-5 py-3 me-sm-3 fs-6 fw-bolder" href="{{ resume }}">Resume</a>
+              <a class="btn btn-primary btn-lg px-5 py-3 me-sm-3 fs-6 fw-bolder" href="{{ contacts }}">Contact</a>
               <a class="btn btn-outline-dark btn-lg px-5 py-3 fs-6 fw-bolder" href="{{ projects }}">Projects</a>
             </div>
           </div>

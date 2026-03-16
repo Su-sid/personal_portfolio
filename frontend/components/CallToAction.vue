@@ -10,7 +10,7 @@ defineProps<{
   <!-- Reusable CTA block used at the end of major pages. -->
   <section class="py-10">
     <UContainer>
-      <UCard class="overflow-hidden border-slate-900/15 bg-gradient-to-r from-slate-900 to-slate-700 text-white card-hover-contrast">
+      <UCard class="overflow-hidden border-slate-900/15 bg-linear-to-r from-slate-900 to-slate-700 text-white card-hover-contrast">
         <template #default>
           <div class="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
             <div class="space-y-2">

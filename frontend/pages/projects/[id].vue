@@ -21,11 +21,7 @@ useSeoMeta({
 const projectThumbnail = computed(() => {
   if (!project.value) return ""
   if (project.value.image_url) return project.value.image_url
-  const sourceUrl = project.value.live_demo_link || project.value.github_link
-  if (sourceUrl) {
-    return `https://image.thum.io/get/width/1200/crop/800/noanimate/${sourceUrl}`
-  }
-  return "https://images.unsplash.com/photo-1518773553398-650c184e0bb3?auto=format&fit=crop&w=1200&q=80"
+  return "/images/placeholders/project.svg"
 })
 </script>
 

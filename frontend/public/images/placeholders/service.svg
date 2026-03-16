@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">Service placeholder</title>
+  <desc id="desc">Abstract placeholder art for a service card.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#0f766e" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="720" fill="url(#bg)" />
+  <circle cx="230" cy="180" r="140" fill="#14b8a6" fill-opacity=".18" />
+  <circle cx="970" cy="520" r="180" fill="#38bdf8" fill-opacity=".16" />
+  <rect x="130" y="170" width="430" height="28" rx="14" fill="#e2e8f0" fill-opacity=".9" />
+  <rect x="130" y="228" width="300" height="20" rx="10" fill="#cbd5e1" fill-opacity=".75" />
+  <rect x="130" y="312" width="940" height="170" rx="28" fill="#f8fafc" fill-opacity=".1" stroke="#e2e8f0" stroke-opacity=".22" />
+  <rect x="170" y="352" width="260" height="92" rx="18" fill="#14b8a6" fill-opacity=".4" />
+  <rect x="470" y="352" width="260" height="92" rx="18" fill="#38bdf8" fill-opacity=".28" />
+  <rect x="770" y="352" width="260" height="92" rx="18" fill="#f8fafc" fill-opacity=".18" />
+</svg>

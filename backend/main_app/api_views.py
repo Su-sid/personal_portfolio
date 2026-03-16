@@ -5,17 +5,17 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import BlogPost, Education, Experience, ProgrammingLanguage, Project, Service, Skill
+from .models import (
+    BlogPost,
+    Project,
+    Service,
+)
 from .serializers import (
     BlogPostDetailSerializer,
     BlogPostListSerializer,
     ContactInquirySerializer,
-    EducationSerializer,
-    ExperienceSerializer,
-    ProgrammingLanguageSerializer,
     ProjectSerializer,
     ServiceSerializer,
-    SkillSerializer,
 )
 
 
@@ -85,28 +85,6 @@ class ProjectDetailView(generics.RetrieveAPIView):
         return Project.objects.prefetch_related("technologies_used")
 
 
-class ResumeView(APIView):
-    def get(self, request):
-        experiences = Experience.objects.all()
-        long_experiences = [exp for exp in experiences if not exp.is_short]
-        short_experiences = [exp for exp in experiences if exp.is_short]
-
-        return Response(
-            {
-                "long_experiences": ExperienceSerializer(long_experiences, many=True).data,
-                "short_experiences": ExperienceSerializer(short_experiences, many=True).data,
-                "education_entries": EducationSerializer(Education.objects.all(), many=True).data,
-                "professional_skills": SkillSerializer(
-                    Skill.objects.filter(category="PROFESSIONAL"), many=True
-                ).data,
-                "programming_languages": ProgrammingLanguageSerializer(
-                    ProgrammingLanguage.objects.all(), many=True
-                ).data,
-            },
-            status=status.HTTP_200_OK,
-        )
-
-
 class BlogPostListView(generics.ListAPIView):
     serializer_class = BlogPostListSerializer
 
@@ -134,7 +112,9 @@ class BlogPostDetailView(generics.RetrieveAPIView):
 class PortfolioLandingView(APIView):
     def get(self, request):
         latest_posts = BlogPost.objects.filter(is_published=True)[:3]
-        featured_projects = Project.objects.filter(is_featured=True).prefetch_related("technologies_used")[:3]
+        featured_projects = Project.objects.filter(is_featured=True).prefetch_related(
+            "technologies_used"
+        )[:3]
         services_queryset = Service.objects.filter(is_featured=True).order_by("-id")
         services = services_queryset[:6]
 

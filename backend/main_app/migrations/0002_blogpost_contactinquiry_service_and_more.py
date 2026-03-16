@@ -4,85 +4,133 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('main_app', '0001_initial'),
+        ("main_app", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='BlogPost',
+            name="BlogPost",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=200)),
-                ('slug', models.SlugField(max_length=220, unique=True)),
-                ('excerpt', models.CharField(max_length=300)),
-                ('content', models.TextField()),
-                ('cover_image', models.ImageField(blank=True, null=True, upload_to='blog_covers/')),
-                ('tags', models.CharField(blank=True, help_text='Comma-separated tags', max_length=300)),
-                ('is_published', models.BooleanField(default=False)),
-                ('published_at', models.DateTimeField(blank=True, null=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=200)),
+                ("slug", models.SlugField(max_length=220, unique=True)),
+                ("excerpt", models.CharField(max_length=300)),
+                ("content", models.TextField()),
+                (
+                    "cover_image",
+                    models.ImageField(blank=True, null=True, upload_to="blog_covers/"),
+                ),
+                (
+                    "tags",
+                    models.CharField(
+                        blank=True, help_text="Comma-separated tags", max_length=300
+                    ),
+                ),
+                ("is_published", models.BooleanField(default=False)),
+                ("published_at", models.DateTimeField(blank=True, null=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
             ],
             options={
-                'ordering': ['-published_at', '-created_at'],
+                "ordering": ["-published_at", "-created_at"],
             },
         ),
         migrations.CreateModel(
-            name='ContactInquiry',
+            name="ContactInquiry",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('full_name', models.CharField(max_length=70)),
-                ('email', models.EmailField(max_length=254)),
-                ('message', models.TextField()),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('responded', models.BooleanField(default=False)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("full_name", models.CharField(max_length=70)),
+                ("email", models.EmailField(max_length=254)),
+                ("message", models.TextField()),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("responded", models.BooleanField(default=False)),
             ],
             options={
-                'verbose_name_plural': 'Contact Inquiries',
-                'ordering': ['-created_at'],
+                "verbose_name_plural": "Contact Inquiries",
+                "ordering": ["-created_at"],
             },
         ),
         migrations.CreateModel(
-            name='Service',
+            name="Service",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=120)),
-                ('summary', models.CharField(max_length=220)),
-                ('description', models.TextField()),
-                ('icon', models.CharField(default='bi-gear', max_length=50)),
-                ('display_order', models.PositiveIntegerField(default=0)),
-                ('is_featured', models.BooleanField(default=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=120)),
+                ("summary", models.CharField(max_length=220)),
+                ("description", models.TextField()),
+                ("icon", models.CharField(default="bi-gear", max_length=50)),
+                ("display_order", models.PositiveIntegerField(default=0)),
+                ("is_featured", models.BooleanField(default=True)),
             ],
             options={
-                'ordering': ['display_order', 'title'],
+                "ordering": ["display_order", "title"],
             },
         ),
         migrations.AlterModelOptions(
-            name='programminglanguage',
-            options={'ordering': ['name']},
+            name="programminglanguage",
+            options={"ordering": ["name"]},
         ),
         migrations.AlterModelOptions(
-            name='project',
-            options={'ordering': ['-created_at']},
+            name="project",
+            options={"ordering": ["-created_at"]},
         ),
         migrations.AlterModelOptions(
-            name='skill',
-            options={'ordering': ['name']},
+            name="skill",
+            options={"ordering": ["name"]},
         ),
         migrations.AlterModelOptions(
-            name='technology',
-            options={'ordering': ['name']},
+            name="technology",
+            options={"ordering": ["name"]},
         ),
         migrations.AlterField(
-            model_name='project',
-            name='category',
-            field=models.CharField(choices=[('web', 'Web Development'), ('mobile', 'Mobile App'), ('data', 'Data Science'), ('ai', 'AI Engineering'), ('prompting', 'Prompt Engineering'), ('iot', 'Internet of Things'), ('other', 'Other')], default='other', max_length=20),
+            model_name="project",
+            name="category",
+            field=models.CharField(
+                choices=[
+                    ("web", "Web Development"),
+                    ("mobile", "Mobile App"),
+                    ("data", "Data Science"),
+                    ("ai", "AI Engineering"),
+                    ("prompting", "Prompt Engineering"),
+                    ("iot", "Internet of Things"),
+                    ("other", "Other"),
+                ],
+                default="other",
+                max_length=20,
+            ),
         ),
         migrations.AlterField(
-            model_name='project',
-            name='image',
-            field=models.ImageField(blank=True, help_text='Upload project image (recommended 1200x800)', null=True, upload_to='project_images/'),
+            model_name="project",
+            name="image",
+            field=models.ImageField(
+                blank=True,
+                help_text="Upload project image (recommended 1200x800)",
+                null=True,
+                upload_to="project_images/",
+            ),
         ),
     ]

@@ -18,7 +18,7 @@ const { data: posts } = await useAsyncData(
 // Stable card image fallback for posts without uploaded cover images.
 const blogThumbnail = (post: BlogListItem) => {
   if (post.cover_image_url) return post.cover_image_url
-  return "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1200&q=80"
+  return "/images/placeholders/blog.svg"
 }
 </script>
 
@@ -41,7 +41,13 @@ const blogThumbnail = (post: BlogListItem) => {
       <div class="grid gap-6 md:grid-cols-4">
         <NuxtLink v-for="post in posts" :key="post.id" :to="`/blog/${post.slug}`" class="group block">
           <UCard class="surface-card h-full overflow-hidden card-hover-contrast">
-            <img :src="blogThumbnail(post)" :alt="post.title" class="h-44 w-full rounded-xl object-cover" />
+            <img
+              :src="blogThumbnail(post)"
+              :alt="post.title"
+              class="h-44 w-full rounded-xl object-cover"
+              loading="lazy"
+              decoding="async"
+            />
             <div class="mt-4 space-y-2">
               <h2 class="text-xl font-extrabold text-slate-900">{{ post.title }}</h2>
               <p class="text-sm text-slate-900/85">{{ post.excerpt }}</p>

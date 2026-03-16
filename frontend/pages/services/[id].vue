@@ -20,14 +20,7 @@ useSeoMeta({
 // Mirror list-page image logic so cards and detail stay visually consistent.
 const serviceImage = computed(() => {
   if (!service.value) return ""
-  const key = `${service.value.title} ${service.value.summary}`.toLowerCase()
-  if (key.includes("ai") || key.includes("automation")) {
-    return "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1200&q=80"
-  }
-  if (key.includes("consult")) {
-    return "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80"
-  }
-  return "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80"
+  return "/images/placeholders/service.svg"
 })
 </script>
 

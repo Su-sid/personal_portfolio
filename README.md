@@ -3,7 +3,7 @@
 This repository is now split into a modern frontend/backend architecture:
 
 - `frontend/`: Nuxt (Vue) application for the portfolio UI.
-- `backend/`: Django API + admin for projects, services, resume data, blog, and contact inquiries.
+- `backend/`: Django API + admin for projects, services, blog, and contact inquiries.
 - `docker-compose.yml`: Local full-stack environment with PostgreSQL.
 
 ## What Changed
@@ -39,7 +39,6 @@ cp .env.example .env
 ```bash
 uv sync
 uv run python manage.py migrate
-uv run python manage.py seed_resume_data
 uv run python manage.py seed_projects
 uv run python manage.py seed_site_content
 uv run python manage.py runserver
@@ -53,7 +52,6 @@ Useful endpoints:
 - `/api/landing/`
 - `/api/services/`
 - `/api/projects/`
-- `/api/resume/`
 - `/api/blog/`
 - `/api/blog/<slug>/`
 - `/api/contact/`
@@ -143,7 +141,7 @@ Backend tests:
 
 ```bash
 cd backend
-uv run python manage.py test
+uv run pytest
 ```
 
 Frontend build/type check:
@@ -153,3 +151,9 @@ cd frontend
 npm run build
 npm run lint
 ```
+
+## Deployment
+
+GitHub Actions and Coolify deployment notes are documented in:
+
+- `docs/deployment/coolify.md`

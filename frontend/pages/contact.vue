@@ -10,17 +10,8 @@ interface ContactState {
 }
 
 const { apiFetch } = useApi()
-const { data: config } = await useAsyncData("site-config-contact", () => apiFetch<SiteConfig>("/config/"))
-
-// Load Calendly widget script on the contact page only.
-useHead({
-  script: [
-    {
-      src: "https://assets.calendly.com/assets/external/widget.js",
-      async: true,
-      type: "text/javascript",
-    },
-  ],
+const { data: config } = await useAsyncData("site-config", () => apiFetch<SiteConfig>("/config/"), {
+  dedupe: "defer",
 })
 
 // Keep a default scheduling URL as fallback when config is empty.
@@ -35,6 +26,7 @@ const state = reactive<ContactState>({
 const isSubmitting = ref(false)
 const statusMessage = ref("")
 const statusType = ref<"success" | "error" | "">("")
+const calendlyEnabled = ref(false)
 
 // Form validation mirrors API-required fields and gives immediate UI feedback.
 const validate = (value: ContactState) => {
@@ -82,6 +74,19 @@ const submit = async () => {
     isSubmitting.value = false
   }
 }
+
+onMounted(() => {
+  useHead({
+    script: [
+      {
+        src: "https://assets.calendly.com/assets/external/widget.js",
+        async: true,
+        type: "text/javascript",
+      },
+    ],
+  })
+  calendlyEnabled.value = true
+})
 </script>
 
 <template>
@@ -125,7 +130,7 @@ const submit = async () => {
         </UForm>
       </UCard>
 
-      <UCard class="surface-card card-hover-contrast">
+      <UCard v-if="calendlyEnabled" class="surface-card card-hover-contrast">
         <!-- Calendly iframe-like widget (script-initialized) for direct bookings. -->
         <div class="mb-6 space-y-2">
           <h2 class="text-2xl font-black text-slate-900">Schedule a Free Consultation</h2>
